@@ -14,6 +14,7 @@ app = Flask(__name__)
 os.makedirs('static/mp3', exist_ok=True)
 os.makedirs('static/images/uploads', exist_ok=True)
 os.makedirs('static/images/processed', exist_ok=True)
+os.makedirs('static/pdf', exist_ok=True)
 
 @app.route('/')
 def index():
@@ -101,23 +102,23 @@ def create_pdf():
     files = request.files.getlist('images')
     pdf = FPDF()
 
+    # Generate a unique filename
+    filename = f"{uuid.uuid4()}.pdf"
+    output_path = os.path.join('static/pdf', filename)
+
     for file in files:
         # Save the uploaded file temporarily
-        temp_image_path = os.path.join('static', file.filename)
+        temp_image_path = os.path.join('static/images/uploads', file.filename)
         file.save(temp_image_path)
 
         # Add the image to the PDF
         pdf.add_page()
-        pdf.image(temp_image_path, x=10, y=10, w=190)  # Adjust image size to fit the page
-
-        # Remove the temporary file after adding it to the PDF
-        os.remove(temp_image_path)
+        pdf.image(temp_image_path, x=10, y=10, w=190)
 
     # Save the final PDF
-    pdf_path = os.path.join('static', 'output.pdf')
-    pdf.output(pdf_path)
+    pdf.output(output_path)
 
-    return jsonify({'pdf_url': pdf_path})
+    return jsonify({'pdf_url': url_for('static', filename=f'pdf/{filename}')})
 
 @app.route('/split-pdf', methods=['POST'])
 def split_pdf():
@@ -151,6 +152,10 @@ def resize_image():
     img.save(output_path)
 
     return jsonify({'resized_image_url': url_for('static', filename=f'images/processed/resized_{unique_filename}')})
+
+@app.route('/google6cda3ef54c5c2da9.html')
+def google_verification():
+    return app.send_static_file('google6cda3ef54c5c2da9.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

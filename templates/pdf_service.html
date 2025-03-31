@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}PDF Service{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #007BFF, #6C63FF);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        form {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        input, button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+        }
+
+        input[type="file"] {
+            background: #fff;
+            color: #333;
+        }
+
+        button {
+            background-color: #FF5722;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #E64A19;
+        }
+
+        .preview-container {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .download-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #007BFF;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>PDF Service</h1>
+    <form id="createPdfForm" enctype="multipart/form-data">
+        <h2>Create PDF from Images</h2>
+        <input type="file" id="images" name="images" accept="image/*" multiple required><br>
+        <button type="button" onclick="createPdf()">Create PDF</button>
+    </form>
+
+    <div class="preview-container" id="previewContainer">
+        <h2>Result</h2>
+        <a id="downloadLink" class="download-btn" href="#" download>Download PDF</a>
+    </div>
+
+    <script>
+        function createPdf() {
+            const form = document.getElementById('createPdfForm');
+            const formData = new FormData(form);
+
+            fetch('/create-pdf', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const previewContainer = document.getElementById('previewContainer');
+                const downloadLink = document.getElementById('downloadLink');
+
+                // Set download link for the PDF
+                downloadLink.href = data.pdf_url;
+                downloadLink.textContent = 'Download PDF';
+                previewContainer.style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
+{% endblock %}

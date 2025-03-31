@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Home | Utility Website{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Utility Website</h1>
+<p>Your one-stop solution for various utilities like text-to-speech, image compression, QR code generation, PDF services, and image resizing.</p>
+
+<div class="services-container">
+    <a href="/tts" class="service-btn">Text-to-Speech</a>
+    <a href="/image-compressor" class="service-btn">Image Compressor</a>
+    <a href="/qr-code" class="service-btn">QR Code Generator</a>
+    <a href="/pdf-service" class="service-btn">PDF Service</a>
+    <a href="/image-resizer" class="service-btn">Image Resizer</a>
+</div>
+
+<style>
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .services-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .service-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        color: #fff;
+        background-color: #FF5722;
+        text-decoration: none;
+        border-radius: 50px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .service-btn:hover {
+        background-color: #E64A19;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+    }
+</style>
+{% endblock %}

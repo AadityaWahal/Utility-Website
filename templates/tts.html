@@ -1,0 +1,163 @@
+<!-- filepath: c:\Users\somiw\Documents\website\file-converter-tts\text-to-speech-website\templates\tts.html -->
+{% extends "base.html" %}
+
+{% block title %}Text-to-Speech{% endblock %}
+
+{% block content %}
+<h1>Text-to-Speech</h1>
+<p>Convert your text into speech with ease. Choose the speed and voice type, then generate and download the audio file.</p>
+
+<div class="tts-container">
+    <form id="ttsForm">
+        <label for="text">Enter Text:</label><br>
+        <textarea id="text" name="text" rows="5" cols="40" placeholder="Type your text here..." required></textarea><br>
+
+        <div class="options">
+            <div>
+                <label for="speed">Speed:</label>
+                <select id="speed" name="speed">
+                    <option value="normal">Normal</option>
+                    <option value="slow">Slow</option>
+                </select>
+            </div>
+            <div>
+                <label for="gender">Voice:</label>
+                <select id="gender" name="gender">
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="button" onclick="generateSpeech()">Generate Speech</button>
+    </form>
+
+    <div id="previewContainer" style="display: none;">
+        <h2>Audio Preview</h2>
+        <audio id="audioPreview" controls></audio>
+        <a id="downloadLink" class="download-btn" href="#" download="output.mp3">Download Audio</a>
+    </div>
+</div>
+
+<style>
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .tts-container {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        width: 90%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        resize: none;
+    }
+
+    .options {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .options div {
+        flex: 1;
+        margin-right: 10px;
+    }
+
+    .options div:last-child {
+        margin-right: 0;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2rem;
+        background-color: #FF5722;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #E64A19;
+    }
+
+    #previewContainer {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    audio {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    .download-btn {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #007BFF;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<script>
+    function generateSpeech() {
+        const form = document.getElementById('ttsForm');
+        const formData = new FormData(form);
+
+        fetch('/speak', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const audio = document.getElementById('audioPreview');
+            const previewContainer = document.getElementById('previewContainer');
+            const downloadLink = document.getElementById('downloadLink');
+
+            audio.src = data.audio_url;
+            previewContainer.style.display = 'block';
+            downloadLink.href = data.audio_url;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Image Compressor{% endblock %}
+
+{% block content %}
+<h1>Image Compressor</h1>
+<p>Compress your images to reduce file size while maintaining quality. Upload an image and set the target size.</p>
+
+<div class="compressor-container">
+    <form id="compressForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="image">Upload Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
+        </div>
+
+        <div class="form-group">
+            <label for="size_kb">Target Size (KB):</label>
+            <input type="number" id="size_kb" name="size_kb" placeholder="Enter size in KB" required>
+        </div>
+
+        <button type="button" onclick="compressImage()">Compress Image</button>
+    </form>
+
+    <div id="previewContainer" style="display: none;">
+        <h2>Compressed Image</h2>
+        <img id="compressedImage" src="#" alt="Compressed Image">
+        <a id="downloadLink" class="download-btn" href="#" download="compressed_image.jpg">Download Compressed Image</a>
+    </div>
+</div>
+
+<script>
+    function compressImage() {
+        const form = document.getElementById('compressForm');
+        const formData = new FormData(form);
+
+        fetch('/compress-image', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            const previewContainer = document.getElementById('previewContainer');
+            const compressedImage = document.getElementById('compressedImage');
+            const downloadLink = document.getElementById('downloadLink');
+
+            compressedImage.src = data.compressed_image_url;
+            downloadLink.href = data.compressed_image_url;
+            previewContainer.style.display = 'block';
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+{% endblock %}

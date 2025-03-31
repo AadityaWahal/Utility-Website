@@ -157,5 +157,9 @@ def resize_image():
 def google_verification():
     return app.send_static_file('google6cda3ef54c5c2da9.html')
 
+@app.route('/sitemap.xml')
+def sitemap():
+    return app.send_static_file('sitemap.xml')
+
 if __name__ == '__main__':
     app.run(debug=True)
